@@ -1,7 +1,7 @@
 pipeline{
     agent any
     parameters{
-        choice(name: "SELECTBRANCH", choice: ['main', 'branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'],description: "Select Any Branch:")
+        choice(name: "SELECTBRANCH", choices: ['main', 'branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'],description: "Select Any Branch:")
     }
     stages{
         stage("Print Selected Branch"){
