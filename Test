@@ -1,17 +1,22 @@
-pipeline {
+pipeline{
     agent any
-    stages {
-        stage('Fetch and Print from All Branches') {
-            steps {
-                script {
-                    def branches = sh(script: 'git branch -r', returnStdout: true).trim().split('\n')
-                    for (def branch in branches) {
-                        def branchName = branch.trim().replaceAll('^\\s+origin/', '')
-                        echo "Fetching and printing content from branch: ${branchName}"
-                        sh "git fetch origin ${branchName}:${branchName}"
-                        sh "git checkout ${branchName}"
-                        def fileContent = sh(script: "cat ${filePath}", returnStdout: true).trim()
-                        echo "Content from branch ${branchName}: ${fileContent}"
+    stages{
+        stage("Print Branch"){
+            steps{
+                echo "Selected Branch is:- ${SelecteBranch}"
+            }
+        }
+        stage("Show Branch Data"){
+            steps{
+                script{
+                    def branch = params.SelecteBranch
+                    def filename = getFileForBranch(branch)
+                    if(filename){
+                        sh "git checkout ${branch}"
+                        sh "cat ${filename}"
+                    }
+                    else{
+                        echo "File not found for branch: ${branch}"
                     }
                 }
             }
