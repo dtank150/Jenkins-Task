@@ -1,0 +1,39 @@
+pipeline{
+    agent any
+    parameters{
+        choice(name: "SELECTBRANCH", choice: ['main', 'branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'],description: "Select Any Branch:")
+    }
+    stages{
+        stage("Print Selected Branch"){
+            steps{
+                script{
+                    def selectedBranch = params.SELECTBRANCH
+                    echo "Selected Branch:- ${selectedBranch}"
+                }
+            }
+        }
+        stage("Show Branch Data"){
+            steps{
+                script{
+                    def selectedBranch = params.SELECTBRANCH
+                    def files = [
+                        'main': 'Main.txt',
+                        'branch-1': 'Hello.txt',
+                        'branch-2': 'Welcome.txt',
+                        'branch-3': 'Branch3.txt',
+                        'branch-4': 'Branch4.txt',
+                        'branch-5': 'Branch5.txt'
+                    ]
+                    def fileName = files[selectedBranch]
+                    if(fileName) {
+                        sh "git checkout ${selectedBranch}"
+                        sh "cat ${fileName}"
+                    }
+                    else{
+                        echo "File not Found for this branch: ${selectedBranch}"
+                    }
+                }
+            }
+        }
+    }
+}
