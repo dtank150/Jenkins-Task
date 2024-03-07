@@ -1,38 +1,21 @@
 pipeline{
     agent any
-    parameters{        
-        choice(name: "SELECTBRANCH", choices: ['main', 'branch-1', 'branch-2', 'branch-3', 'branch-4', 'branch-5'],description: "Select Any Branch:")  
-    }
     stages{
-        stage("Print Selected Branch"){
+        
+        stage("Print Branch"){
             steps{
-                script{
-                    def selectedBranch = params.SELECTBRANCH
-                    echo "Selected Branch:- ${selectedBranch}"
-                }
+                echo "Selected Branch is:- ${SelecteBranch}"
             }
         }
-        stage("Show Branch Data"){
+        stage("Git clone"){
             steps{
-                script{
-                    def selectedBranch = params.SELECTBRANCH
-                    def files = [
-                        'main': 'Main.txt',
-                        'branch-1': 'Hello.txt',
-                        'branch-2': 'Welcome.txt',
-                        'branch-3': 'Branch3.txt',
-                        'branch-4': 'Branch4.txt',
-                        'branch-5': 'Branch5.txt'
-                    ]
-                    def fileName = files[selectedBranch]
-                    if(fileName) {
-                        sh "git checkout ${selectedBranch}"
-                        sh "cat ${fileName}"
-                    }
-                    else{
-                        echo "File not Found for this branch: ${selectedBranch}"
-                    }
-                }
+                sh "git clone https://github.com/dtank150/Jenkins-Task.git"
+            }
+        }
+        stage("File Fetch"){
+            steps{
+                def filepath = "${env.WORKSPACE}"
+                sh "cat ${filepath}"
             }
         }
     }
